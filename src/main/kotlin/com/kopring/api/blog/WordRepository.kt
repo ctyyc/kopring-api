@@ -1,6 +1,6 @@
-package com.kopring.api.blog.repository
+package com.kopring.api.blog
 
-import com.kopring.api.blog.entity.Wordcount
+import com.kopring.api.common.entity.Wordcount
 import org.springframework.data.repository.CrudRepository
 
 interface WordRepository : CrudRepository<Wordcount, String> {

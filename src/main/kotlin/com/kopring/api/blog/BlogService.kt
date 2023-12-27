@@ -1,9 +1,6 @@
-package com.kopring.api.blog.service
+package com.kopring.api.blog
 
-import com.kopring.api.blog.dto.BlogDto
-import com.kopring.api.blog.entity.Wordcount
-import com.kopring.api.blog.repository.WordRepository
-import com.kopring.api.common.exception.InvalidInputException
+import com.kopring.api.common.entity.Wordcount
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType

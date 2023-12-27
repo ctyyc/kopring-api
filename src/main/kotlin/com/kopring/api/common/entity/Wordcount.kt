@@ -1,4 +1,4 @@
-package com.kopring.api.blog.entity
+package com.kopring.api.common.entity
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Id

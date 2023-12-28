@@ -15,7 +15,38 @@ class BlogService(
     @Value("\${REST_API_KEY}")
     lateinit var restApiKey: String
 
-    fun searchKakao(blogDto: BlogDto): String? {
+//    fun searchKakao(blogDto: BlogDto): String? {
+//        val webClient: WebClient = WebClient
+//                .builder()
+//                .baseUrl("https://dapi.kakao.com")
+//                .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+//                .build()
+//
+//        val response = webClient
+//                .get()
+//                .uri {
+//                    it.path("/v2/search/blog")
+//                        .queryParam("query", blogDto.query)
+//                        .queryParam("sort", blogDto.sort)
+//                        .queryParam("page", blogDto.page)
+//                        .queryParam("size", blogDto.size)
+//                        .build()
+//                }
+//                .header("Authorization", "KakaoAK $restApiKey")
+//                .retrieve()
+//                .bodyToMono<String>()
+//
+//        val result = response.block()
+//
+//        val lowQuery: String = blogDto.query.lowercase()
+//        val word: Wordcount = wordRepository.findById(lowQuery).orElse(Wordcount(lowQuery))
+//        word.cnt++
+//
+//        wordRepository.save(word)
+//
+//        return result
+//    }
+    fun searchKakao(query: String, sort: String?, page: Int?, size: Int?): String? {
         val webClient: WebClient = WebClient
                 .builder()
                 .baseUrl("https://dapi.kakao.com")
@@ -26,11 +57,11 @@ class BlogService(
                 .get()
                 .uri {
                     it.path("/v2/search/blog")
-                        .queryParam("query", blogDto.query)
-                        .queryParam("sort", blogDto.sort)
-                        .queryParam("page", blogDto.page)
-                        .queryParam("size", blogDto.size)
-                        .build()
+                            .queryParam("query", query)
+                            .queryParam("sort", sort)
+                            .queryParam("page", page)
+                            .queryParam("size", size)
+                            .build()
                 }
                 .header("Authorization", "KakaoAK $restApiKey")
                 .retrieve()
@@ -38,7 +69,7 @@ class BlogService(
 
         val result = response.block()
 
-        val lowQuery: String = blogDto.query.lowercase()
+        val lowQuery: String = query.lowercase()
         val word: Wordcount = wordRepository.findById(lowQuery).orElse(Wordcount(lowQuery))
         word.cnt++
 

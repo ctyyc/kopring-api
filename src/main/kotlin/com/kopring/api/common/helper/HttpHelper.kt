@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Component
+import org.springframework.util.MultiValueMap
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import reactor.core.publisher.Mono
@@ -26,10 +27,10 @@ class HttpHelper {
 //                .get()
 //                .uri {
 //                    it.path("/v2/search/blog")
-//                            .queryParam("query", query)
-//                            .queryParam("sort", sort)
-//                            .queryParam("page", page)
-//                            .queryParam("size", size)
+//                            .queryParam("query", 1)
+//                            .queryParam("sort", 1)
+//                            .queryParam("page", 1)
+//                            .queryParam("size", 1)
 //                            .build()
 //                }
 //                .header("Authorization", "KakaoAK $restApiKey")
@@ -40,10 +41,11 @@ class HttpHelper {
 //        return response
 //    }
 
-    fun requestGetResponseString(path: String, headers: HttpHeaders?, params: Map<String, Any>?): Mono<String> {
+    fun requestGetResponseString(path: String, headers: HttpHeaders?, params: Map<String, Any>?): ResponseEntity<String>? {
         val webClient: WebClient = WebClient.builder().build()
 
-        val requestBuilder = webClient.get()
+        val requestBuilder = webClient
+                .get()
                 .uri { uriBuilder ->
                     uriBuilder.path(path)
                     params?.let {
@@ -54,6 +56,22 @@ class HttpHelper {
 
         headers?.let { requestBuilder.headers { it.addAll(headers) } }
 
-        return requestBuilder.retrieve().bodyToMono(String::class.java)
+        return requestBuilder.retrieve().bodyToMono<ResponseEntity<String>>().block()
+    }
+
+    fun requestGetResponseStringMap(parmaPath: String, paramHeaders: HttpHeaders, params: MultiValueMap<String, String>): ResponseEntity<String>? {
+        val webClient: WebClient = WebClient.create()
+
+        val requestBuilder = webClient
+                .get()
+                .uri { uriBuilder ->
+                    uriBuilder
+                            .path(parmaPath)
+                            .queryParams(params)
+                            .build()
+                }
+                .headers { httpHeaders -> httpHeaders.addAll(paramHeaders) }
+
+        return requestBuilder.retrieve().bodyToMono<ResponseEntity<String>>().block()
     }
 }
